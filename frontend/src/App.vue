@@ -1,18 +1,21 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <AddTransaction/>
+    <TransactionList/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AddTransaction from '@/components/AddTransaction.vue';
+import TransactionList from '@/components/TransactionList.vue';
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
-  }
+    AddTransaction,
+    TransactionList,
+  },
+
 }
 </script>
 
