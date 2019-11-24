@@ -22,7 +22,7 @@
             <b-form-group label="Transaction Type" label-for="trans_type">
                 <b-form-input 
                     id="trans_type" 
-                    v-model="form.tras_type"
+                    v-model="form.trans_type"
                     type="text"
                     required
                 ></b-form-input>
@@ -94,9 +94,9 @@ export default {
     data() {
         return {
             form: {
-                amount: 0,
-                currency: null,
-                trans_type: null,
+                amount: null,
+                currency: '',
+                trans_type: '',
                 category: '',
                 subcategory: '',
                 from_account: '',
@@ -119,9 +119,10 @@ export default {
                 from_account: this.form.from_account,
                 on_account: this.form.on_account,
                 create_datetime: this.form.create_datetime,
+                place: this.form.place,
                 notes: this.form.notes,
             };
-            this.$store.dispatch('createTransaction', data);
+            this.$store.dispatch('createTransaction', { data });
         }
     }
 }
