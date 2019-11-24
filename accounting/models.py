@@ -7,22 +7,9 @@ from django.utils import timezone
     in future.
 """
 class Transaction(models.Model):
-    CURRENCIES = [
-        ('UAH', 'UAH'),
-        ('USD', 'USD'),
-        ('EUR', 'EUR'),
-        ('RUB', 'RUB')
-    ]
-
-    TRANS_TYPES = [
-        ('INC', 'INCOME'),
-        ('SPE', 'SPENDINGS'),
-        ('TEC', 'TECHNIC')
-    ]
-
     amount = models.DecimalField(max_digits=7, decimal_places=2)
-    currency = models.CharField(max_length=3, choices=CURRENCIES)
-    trans_type = models.CharField(max_length=3, choices=TRANS_TYPES)
+    currency = models.CharField(max_length=3)
+    trans_type = models.CharField(max_length=3)
     category = models.CharField(max_length=10, blank=True)
     subcategory = models.CharField(max_length=10, blank=True)
     from_account = models.CharField(max_length=10, blank=True)
