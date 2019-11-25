@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-form @submit="onSubmit" @reset="onReset">
+        <b-form @submit="onSubmit">
             <b-form-group label="Amount" label-for="amount">
                 <b-form-input 
                     id="amount" 
@@ -60,13 +60,13 @@
                 ></b-form-input>
             </b-form-group>
 
-            <b-form-group label="Date and Time" label-for="create_datetime">
+            <!-- <b-form-group label="Date and Time" label-for="create_datetime">
                 <b-form-input 
                     id="create_datetime" 
                     v-model="form.create_datetime"
                     type="text"
                 ></b-form-input>
-            </b-form-group>
+            </b-form-group> -->
 
             <b-form-group label="Place" label-for="place">
                 <b-form-input 
@@ -101,7 +101,7 @@ export default {
                 subcategory: '',
                 from_account: '',
                 on_accout: '',
-                create_datetime: null,
+                //create_datetime: null,
                 place: '',
                 notes: '',
             },
@@ -118,11 +118,11 @@ export default {
                 subcategory: this.form.subcategory,
                 from_account: this.form.from_account,
                 on_account: this.form.on_account,
-                create_datetime: this.form.create_datetime,
+                //create_datetime: this.form.create_datetime,
                 place: this.form.place,
                 notes: this.form.notes,
             };
-            this.$store.dispatch('createTransaction', { data });
+            this.$store.dispatch('createTransaction', data);
         }
     }
 }

@@ -34,7 +34,7 @@ export default new Vuex.Store({
     },
     actions: {
         async createTransaction ({ commit }, transactionData) {
-            const response = await HTTP.post('/transactions/', transactionData);
+            const response = await HTTP.post('transactions/', transactionData);
             if (response.status === 201) {
                 commit(ADD_TRANSACTION, response.data)
             }
@@ -46,9 +46,9 @@ export default new Vuex.Store({
             }
         },
         async getTransactions ({ commit }) {
-            const response = await HTTP.get('/transactions/');
-            if (response.status === 201) {
-                commit(SET_TRANSACTIONS, response.data)
+            const response = await HTTP.get('transactions/');
+            if (response.status === 200) {
+                commit(SET_TRANSACTIONS, response.data.results)
             }
         }
     }
