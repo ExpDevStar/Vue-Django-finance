@@ -33,23 +33,29 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        async getTransactions ({ commit }) {
+            const response = await HTTP.get('transactions/');
+            if (response.status === 200) {
+                commit(SET_TRANSACTIONS, response.data.results)
+            }
+        },
         async createTransaction ({ commit }, transactionData) {
             const response = await HTTP.post('transactions/', transactionData);
             if (response.status === 201) {
                 commit(ADD_TRANSACTION, response.data)
             }
         },
-        async deleteTransaction({ commit }, transaction) {
-            const response = await HTTP.delete(`/transactions/${transaction.id}/`);
-            if (response.status === 201) {
-                commit(REMOVE_TRANSACTION, response.data)
+        async updateTransaction ({ dispatch }, transaction, transactionData) {
+            const response = await HTTP.put(`transactions/${transaction.id}/`, transactionData);
+            if (response.status === 200) {
+                dispatch('getTransactions')
             }
         },
-        async getTransactions ({ commit }) {
-            const response = await HTTP.get('transactions/');
-            if (response.status === 200) {
-                commit(SET_TRANSACTIONS, response.data.results)
+        async deleteTransaction ({ commit }, transaction) {
+            const response = await HTTP.delete(`transactions/${transaction.id}/`);
+            if (response.status === 204) {
+                commit(REMOVE_TRANSACTION, transaction)
             }
-        }
+        },
     }
 })
