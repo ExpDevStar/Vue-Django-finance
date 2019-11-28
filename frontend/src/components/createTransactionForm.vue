@@ -60,13 +60,13 @@
                 ></b-form-input>
             </b-form-group>
 
-            <!-- <b-form-group label="Date and Time" label-for="create_datetime">
+            <b-form-group label="Date and Time" label-for="create_datetime">
                 <b-form-input 
                     id="create_datetime" 
                     v-model="form.create_datetime"
                     type="text"
                 ></b-form-input>
-            </b-form-group> -->
+            </b-form-group>
 
             <b-form-group label="Place" label-for="place">
                 <b-form-input 
@@ -82,15 +82,15 @@
                 ></b-form-textarea>
             </b-form-group>
 
-            <b-button type="submit" variant="primary">Submit</b-button>
-            <b-button type="reset" variant="danger">Reset</b-button>
+            <b-button type="submit" variant="primary">Create</b-button>
+            <b-button @click="$bvModal.hide('createTransactionForm')">Cancel</b-button>
         </b-form>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'AddTransaction',
+    name: 'createTransactionForm',
     data() {
         return {
             form: {
@@ -100,8 +100,8 @@ export default {
                 category: '',
                 subcategory: '',
                 from_account: '',
-                on_accout: '',
-                //create_datetime: null,
+                on_account: '',
+                create_datetime: new Date(),
                 place: '',
                 notes: '',
             },
@@ -118,11 +118,12 @@ export default {
                 subcategory: this.form.subcategory,
                 from_account: this.form.from_account,
                 on_account: this.form.on_account,
-                //create_datetime: this.form.create_datetime,
+                create_datetime: this.form.create_datetime,
                 place: this.form.place,
                 notes: this.form.notes,
             };
             this.$store.dispatch('createTransaction', data);
+            this.$bvModal.hide('createTransactionForm');
         }
     }
 }
