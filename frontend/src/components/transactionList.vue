@@ -18,7 +18,7 @@
                     <b-th>Create DateTime</b-th>
                     <b-th>Place</b-th>
                     <b-th>Notes</b-th>
-                    <b-th><b-button v-b-modal.updateTransactionForm variant="warning">Edit</b-button></b-th>
+                    <b-th><b-button @click="showEditModal(transaction)" variant="warning">Edit</b-button></b-th>
                 </b-tr>
             </b-thead>
             <b-tbody>
@@ -34,17 +34,17 @@
                     <b-td>{{ transaction.create_datetime }}</b-td>
                     <b-td>{{ transaction.place }}</b-td>
                     <b-td>{{ transaction.notes }}</b-td>
-                    <b-th><b-button v-b-modal.deleteTransaction variant="danger">Delete</b-button></b-th>
+                    <b-th><b-button @click="showDeleteModal(transaction)" variant="danger">Delete</b-button></b-th>
                 </b-tr>
             </b-tbody>
         </b-table-simple>
-        <b-modal id="createTransactionForm" title="Create Transaction" hide-footer="true" no-close-on-backdrop="true">
+        <b-modal id="createTransactionForm" title="Create Transaction" hide-footer no-close-on-backdrop>
             <createTransactionForm/>
         </b-modal>
-        <b-modal id="updateTransactionForm" title="Edit Transaction" hide-footer="true" no-close-on-backdrop="true">
-            <updateTransactionForm/>
+        <b-modal id="updateTransactionForm" title="Edit Transaction" hide-footer no-close-on-backdrop>
+            <updateTransactionForm :transaction="transaction"/>
         </b-modal>
-        <b-modal id="deleteTransaction" title="Delete Transaction" ok-title="Delete" @ok="onDelete">
+        <b-modal id="deleteTransaction" title="Delete Transaction" ok-title="Delete" @ok="onDelete(transaction)">
             <p>Are you sure to delete the transaction?</p>
         </b-modal>
     </div>
@@ -62,17 +62,27 @@ export default {
         updateTransactionForm,
     },
     data() {
-        return {};
+        return {
+            transaction: null,
+        };
     },
     computed: {
         transactions() {
             return this.$store.getters.transactions;
-        }
+        },
     },
     methods: {
         onDelete(transaction) {
             this.$store.dispatch('deleteTransaction', transaction)
-        }
+        },
+        showEditModal(transaction) {
+            this.$bvModal.show('updateTransactionForm');
+            this.transaction = transaction;
+        },
+        showDeleteModal(transaction) {
+            this.$bvModal.show('deleteTransaction');
+            this.transaction = transaction;
+        },
     },
 
     beforeMount() {

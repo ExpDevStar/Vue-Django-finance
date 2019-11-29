@@ -22,15 +22,15 @@ export default new Vuex.Store({
         transactions: state => state.transactions
     },
     mutations: {
+        [SET_TRANSACTIONS] (state, transactions) {
+            state.transactions = transactions;
+        },
         [ADD_TRANSACTION] (state, transaction) {
             state.transactions.push(transaction);
         },
         [REMOVE_TRANSACTION] (state, transaction) {
             state.transactions.splice(state.transactions.indexOf(transaction), 1);
         },
-        [SET_TRANSACTIONS] (state, transactions) {
-            state.transactions = transactions;
-        }
     },
     actions: {
         async getTransactions ({ commit }) {
@@ -45,8 +45,8 @@ export default new Vuex.Store({
                 commit(ADD_TRANSACTION, response.data)
             }
         },
-        async updateTransaction ({ dispatch }, transaction, transactionData) {
-            const response = await HTTP.put(`transactions/${transaction.id}/`, transactionData);
+        async updateTransaction ({ dispatch }, transactionData) {
+            const response = await HTTP.put(`transactions/${transactionData.id}/`, transactionData.data);
             if (response.status === 200) {
                 dispatch('getTransactions')
             }
