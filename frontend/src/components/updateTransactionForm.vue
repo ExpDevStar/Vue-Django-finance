@@ -91,9 +91,11 @@
 <script>
 export default {
     name: 'updateTransactionForm',
+    props: ['transaction'],
     data() {
         return {
             form: {
+                id: null,
                 amount: null,
                 currency: '',
                 trans_type: '',
@@ -101,29 +103,50 @@ export default {
                 subcategory: '',
                 from_account: '',
                 on_account: '',
-                create_datetime: new Date(),
+                create_datetime: null,
                 place: '',
                 notes: '',
             },
         }
     },
     methods: {
-        onSubmit(evt, transaction) {
+        onSubmit(evt) {
             evt.preventDefault();
-            const data = {
-                amount: this.form.amount,
-                currency: this.form.currency,
-                trans_type: this.form.trans_type,
-                category: this.form.category,
-                subcategory: this.form.subcategory,
-                from_account: this.form.from_account,
-                on_account: this.form.on_account,
-                create_datetime: this.form.create_datetime,
-                place: this.form.place,
-                notes: this.form.notes,
+            const transactionData = {
+                id: this.form.id,
+                data: {
+                    amount: this.form.amount,
+                    currency: this.form.currency,
+                    trans_type: this.form.trans_type,
+                    category: this.form.category,
+                    subcategory: this.form.subcategory,
+                    from_account: this.form.from_account,
+                    on_account: this.form.on_account,
+                    create_datetime: this.form.create_datetime,
+                    place: this.form.place,
+                    notes: this.form.notes,
+                }
             };
-            this.$store.dispatch('updateTransaction', transaction, data);
-        }
+            this.$store.dispatch('updateTransaction', transactionData);
+            this.$bvModal.hide('updateTransactionForm');
+        },
+        updateFormData() {
+            const transaction = this.transaction;
+            this.form.id = transaction.id,
+            this.form.amount = transaction.amount;
+            this.form.currency = transaction.currency;
+            this.form.trans_type = transaction.trans_type;
+            this.form.category = transaction.category;
+            this.form.subcategory = transaction.subcategory;
+            this.form.from_account = transaction.from_account;
+            this.form.on_account = transaction.on_account;
+            this.form.create_datetime = transaction.create_datetime;
+            this.form.place = transaction.place;
+            this.form.notes = transaction.notes;
+        },
+    },
+    beforeMount() {
+        this.updateFormData();
     }
 }
 </script>
