@@ -129,9 +129,28 @@ export default new Vuex.Store({
             if (response.status === 204) {
                 commit(REMOVE_TRANSACTION, transaction)
             }
+
         },
 
-        //Accouts actions
+        //Accounts actions
+        // getAccounts ({ commit }) {
+        //     return new Promise((resolve, reject) => {
+        //         HTTP.get('accounts/')
+        //         .then((response) => {
+        //             commit(SET_ACCOUNTS, response.data.results);
+        //             resolve(response);
+        //         })
+        //         .catch((err) => {
+        //             reject(err);
+        //         });
+        //     });
+        // },
+        async getAccounts ({ commit }) {
+            const response = await HTTP.get('accounts/');
+            if (response.status === 200) {
+                commit(SET_ACCOUNTS, response.data.results)
+            }
+        },
         //Currencies actions
         //Categories actions
         //Subcategories actions

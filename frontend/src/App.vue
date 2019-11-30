@@ -6,7 +6,7 @@
 
 <script>
 
-import transactionList from '@/components/transactionList.vue';
+import transactionList from '@/components/transaction/transactionList.vue';
 
 export default {
   name: 'app',

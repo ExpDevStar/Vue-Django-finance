@@ -45,19 +45,19 @@
             </b-form-group>
 
             <b-form-group label="From account" label-for="from_account">
-                <b-form-input 
+                <b-form-select 
                     id="from_account" 
                     v-model="form.from_account"
-                    type="text"
-                ></b-form-input>
+                    :options="getAccounts"
+                ></b-form-select>
             </b-form-group>
 
             <b-form-group label="On account" label-for="on_account">
-                <b-form-input 
+                <b-form-select 
                     id="on_account" 
                     v-model="form.on_account"
-                    type="text"
-                ></b-form-input>
+                    :options="getAccounts"
+                ></b-form-select>
             </b-form-group>
 
             <b-form-group label="Date and Time" label-for="create_datetime">
@@ -107,6 +107,22 @@ export default {
             },
         }
     },
+    computed: {
+        getAccounts() {
+            const rawAccounts = this.$store.getters.accounts;
+            const accounts = [];
+            if (rawAccounts) {
+                rawAccounts.forEach((rawAccount) => {
+                    const account = {
+                        value: rawAccount.id,
+                        text: `${rawAccount.title}, ${rawAccount.amount} ${rawAccount.currency}` 
+                    };
+                    accounts.push(account);
+                })
+            }
+            return accounts
+        }
+    },
     methods: {
         onSubmit(evt) {
             evt.preventDefault();
@@ -125,6 +141,9 @@ export default {
             this.$store.dispatch('createTransaction', data);
             this.$bvModal.hide('createTransactionForm');
         }
+    },
+    beforeMount() {
+        this.$store.dispatch('getAccounts');
     }
 }
 </script>
