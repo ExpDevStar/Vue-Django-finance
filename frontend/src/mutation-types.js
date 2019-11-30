@@ -1,3 +1,31 @@
+//Transactions mutations types
+export const SET_TRANSACTIONS = 'SET_TRANSACTIONS'
 export const ADD_TRANSACTION = 'ADD_TRANSACTION'
 export const REMOVE_TRANSACTION = 'REMOVE_TRANSACTION'
-export const SET_TRANSACTIONS = 'SET_TRANSACTIONS'
+
+//Accounts mutations types
+export const SET_ACCOUNTS = 'SET_ACCOUNTS'
+export const ADD_ACCOUNT = 'ADD_ACCOUNT'
+export const REMOVE_ACCOUNT = 'REMOVE_ACCOUNT'
+
+//Currencies mutations types
+export const SET_CURRENCIES = 'SET_CURRENCIES'
+export const ADD_CURRENCY = 'ADD_CURRENCY'
+export const REMOVE_CURRENCY = 'REMOVE_CURRENCY'
+
+//Categories mutations types
+export const SET_CATEGORIES = 'SET_CATEGORIES'
+export const ADD_CATEGORY = 'ADD_CATEGORY'
+export const REMOVE_CATEGORY = 'REMOVE_CATEGORY'
+
+//Subcategories mutations types
+export const SET_SUBCATEGORIES = 'SET_SUBCATEGORIES'
+export const ADD_SUBCATEGORY = 'ADD_SUBCATEGORY'
+export const REMOVE_SUBCATEGORY = 'REMOVE_SUBCATEGORY'
+
+//Places mutations types
+export const SET_PLACES = 'SET_PLACES'
+export const ADD_PLACE = 'ADD_PLACE'
+export const REMOVE_PLACE = 'REMOVE_PLACE'
+
+
