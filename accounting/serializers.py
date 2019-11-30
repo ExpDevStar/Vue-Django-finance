@@ -8,20 +8,25 @@ class TransactionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AccountSerializer(serializers.ModelSerializer):
+    transactions_from_account = serializers.PrimaryKeyRelatedField(many=True, queryset=models.Transaction.objects.all())
+    transactions_on_account = serializers.PrimaryKeyRelatedField(many=True, queryset=models.Transaction.objects.all())
     class Meta:
         model = models.Account
-        fields = '__all__'
+        fields = ['id', 'title', 'amount', 'currency', 'notes', 'create_datetime', 'transactions_from_account', 'transactions_on_account']
 
 class CurrencySerializer(serializers.ModelSerializer):
+    transactions = serializers.PrimaryKeyRelatedField(many=True, queryset=models.Transaction.objects.all())
+    accounts = serializers.PrimaryKeyRelatedField(many=True, queryset=models.Account.objects.all())
     class Meta:
         model = models.Currency
-        fields = '__all__'
+        fields = ['id', 'name', 'full_name', 'transactions', 'accounts']
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    subcategories = serializers.PrimaryKeyRelatedField(many=True, queryset=models.Category.objects.all())
     class Meta:
         model = models.Category
-        fields = '__all__'
+        fields = ['id', 'name', 'cat_type', 'subcategories']
 
 class SubcategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,6 +35,7 @@ class SubcategorySerializer(serializers.ModelSerializer):
 
 
 class PlaceSerializer(serializers.ModelSerializer):
+    transactions = serializers.PrimaryKeyRelatedField(many=True, queryset=models.Transaction.objects.all())
     class Meta:
         model = models.Place
-        fields = '__all__'
+        fields = ['id', 'name', 'transactions']
