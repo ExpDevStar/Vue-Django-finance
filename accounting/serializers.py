@@ -16,7 +16,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
 class CurrencySerializer(serializers.ModelSerializer):
     transactions = serializers.PrimaryKeyRelatedField(many=True, queryset=models.Transaction.objects.all())
-    accounts = serializers.PrimaryKeyRelatedField(many=True, queryset=models.Account.objects.all())
+    accounts = serializers.StringRelatedField(many=True)
     class Meta:
         model = models.Currency
         fields = ['id', 'name', 'full_name', 'transactions', 'accounts']
