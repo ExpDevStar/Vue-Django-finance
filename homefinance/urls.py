@@ -5,7 +5,11 @@ from accounting import views
 
 router = routers.DefaultRouter()
 router.register(r'transactions', views.TransactionViewSet)
-
+router.register(r'accounts', views.AccountViewSet)
+router.register(r'currencies', views.CurrencyViewSet)
+router.register(r'categories', views.CategoryViewSet)
+router.register(r'subcategories', views.SubcategoryViewSet)
+router.register(r'places', views.PlaceViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
