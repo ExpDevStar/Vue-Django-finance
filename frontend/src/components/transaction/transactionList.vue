@@ -52,8 +52,8 @@
 
 <script>
 
-import createTransactionForm from '@/components/transaction/createTransactionForm.vue';
-import updateTransactionForm from '@/components/transaction/updateTransactionForm.vue';
+import createTransactionForm from '@/components/createTransactionForm.vue';
+import updateTransactionForm from '@/components/updateTransactionForm.vue';
 
 export default {
     name: 'transactionList',
