@@ -10,14 +10,14 @@ TRANSACTION_TYPES = [
 
 class Transaction(models.Model):
     amount = models.DecimalField(max_digits=7, decimal_places=2)
-    currency = models.ForeignKey('Currency', on_delete=models.PROTECT)
+    currency = models.ForeignKey('Currency', related_name='transactions', on_delete=models.PROTECT)
     trans_type = models.CharField(max_length=3, choices=TRANSACTION_TYPES)
-    category = models.ForeignKey('Category', on_delete=models.PROTECT, blank=True, null=True)
-    subcategory = models.ForeignKey('Subcategory', on_delete=models.PROTECT, blank=True, null=True)
-    from_account = models.ForeignKey('Account', related_name="from_account", on_delete=models.PROTECT, blank=True, null=True)
-    on_account = models.ForeignKey('Account', related_name="on_account", on_delete=models.PROTECT, blank=True, null=True)
+    category = models.ForeignKey('Category', related_name='transactions', on_delete=models.PROTECT, blank=True, null=True)
+    subcategory = models.ForeignKey('Subcategory', related_name='transactions', on_delete=models.PROTECT, blank=True, null=True)
+    from_account = models.ForeignKey('Account', related_name="transactions_from_account", on_delete=models.PROTECT, blank=True, null=True)
+    on_account = models.ForeignKey('Account', related_name="transactions_on_account", on_delete=models.PROTECT, blank=True, null=True)
     create_datetime = models.DateTimeField(default=timezone.now)
-    place = models.ForeignKey('Place', on_delete=models.PROTECT, blank=True, null=True)
+    place = models.ForeignKey('Place', related_name='transactions', on_delete=models.PROTECT, blank=True, null=True)
     notes = models.TextField(blank=True)
 
     def __str__(self):
@@ -31,7 +31,7 @@ class Transaction(models.Model):
 class Account(models.Model):
     title = models.CharField(max_length=20)
     amount = models.DecimalField(max_digits=7, decimal_places=2)
-    currency = models.ForeignKey('Currency', on_delete=models.PROTECT)
+    currency = models.ForeignKey('Currency', related_name='accounts', on_delete=models.PROTECT)
     notes = models.TextField(blank=True)
     create_datetime = models.DateTimeField(default=timezone.now)
 
@@ -56,7 +56,7 @@ class Category(models.Model):
 
 class Subcategory(models.Model):
     name = models.CharField(max_length=20)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.PROTECT)
 
     def __str__(self):
         return '{}, {}'.format(self.name, self.category)
