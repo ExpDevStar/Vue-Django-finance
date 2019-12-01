@@ -1,30 +1,32 @@
 import {
-    SET_TRANSACTIONS, ADD_TRANSACTION, REMOVE_TRANSACTION,
-    SET_ACCOUNTS, ADD_ACCOUNT, REMOVE_ACCOUNT,
+    SET_TRANSACTIONS, CREATE_TRANSACTION, REMOVE_TRANSACTION,
+    SET_ACCOUNTS, CREATE_ACCOUNT, REMOVE_ACCOUNT,
     SET_CURRENCIES, ADD_CURRENCY, REMOVE_CURRENCY,
-    SET_CATEGORIES, ADD_CATEGORY, REMOVE_CATEGORY,
-    SET_SUBCATEGORIES, ADD_SUBCATEGORY, REMOVE_SUBCATEGORY,
+    SET_CATEGORIES, CREATE_CATEGORY, REMOVE_CATEGORY,
+    SET_SUBCATEGORIES, CREATE_SUBCATEGORY, REMOVE_SUBCATEGORY,
     SET_PLACES, ADD_PLACE, REMOVE_PLACE,
 
-} from './mutation-types.js' 
+} from './mutation-types.js'
 
 export default {
     //Transactions mutations
     [SET_TRANSACTIONS] (state, transactions) {
         state.transactions = transactions;
     },
-    [ADD_TRANSACTION] (state, transaction) {
-        state.transactions.push(transaction);
+    [CREATE_TRANSACTION] (state, transaction) {
+        state.transactions = [transaction, ...state.transactions];
     },
-    [REMOVE_TRANSACTION] (state, transaction) {
-        state.transactions.splice(state.transactions.indexOf(transaction), 1);
+    [REMOVE_TRANSACTION] (state, { id }) {
+        state.transactions = state.transactions.filter(transaction => {
+            return transaction.id !== id
+        })
     },
 
     //Accounts mutations
     [SET_ACCOUNTS] (state, accounts) {
         state.accounts = accounts;
     },
-    [ADD_ACCOUNT] (state, account) {
+    [CREATE_ACCOUNT] (state, account) {
         state.accounts.push(account);
     },
     [REMOVE_ACCOUNT] (state, account) {
@@ -46,7 +48,7 @@ export default {
     [SET_CATEGORIES] (state, categories) {
         state.categories = categories;
     },
-    [ADD_CATEGORY] (state, category) {
+    [CREATE_CATEGORY] (state, category) {
         state.categories.push(category);
     },
     [REMOVE_CATEGORY] (state, category) {
@@ -57,7 +59,7 @@ export default {
     [SET_SUBCATEGORIES] (state, subcategories) {
         state.subcategories = subcategories;
     },
-    [ADD_SUBCATEGORY] (state, subcategory) {
+    [CREATE_SUBCATEGORY] (state, subcategory) {
         state.subcategories.push(subcategory);
     },
     [REMOVE_SUBCATEGORY] (state, subcategory) {

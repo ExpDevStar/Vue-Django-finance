@@ -1,13 +1,12 @@
- 
-import axios from 'axios'
+ import axios from 'axios'
 
 import {
-    SET_TRANSACTIONS, ADD_TRANSACTION, REMOVE_TRANSACTION,
-    SET_ACCOUNTS,
-    SET_CURRENCIES,
-    SET_CATEGORIES,
-    SET_SUBCATEGORIES,
-    SET_PLACES,
+    SET_TRANSACTIONS, CREATE_TRANSACTION, REMOVE_TRANSACTION,
+    SET_ACCOUNTS, CREATE_ACCOUNT, REMOVE_ACCOUNT,
+    SET_CURRENCIES, ADD_CURRENCY, REMOVE_CURRENCY,
+    SET_CATEGORIES, CREATE_CATEGORY, REMOVE_CATEGORY,
+    SET_SUBCATEGORIES, CREATE_SUBCATEGORY, REMOVE_SUBCATEGORY,
+    SET_PLACES, ADD_PLACE, REMOVE_PLACE,
 
 } from './mutation-types.js'
 
@@ -26,7 +25,7 @@ const actions = {
     async createTransaction ({ commit }, transactionData) {
         const response = await HTTP.post('transactions/', transactionData);
         if (response.status === 201) {
-            commit(ADD_TRANSACTION, response.data)
+            commit(CREATE_TRANSACTION, response.data)
         }
     },
     async updateTransaction ({ dispatch }, transactionData) {
@@ -44,56 +43,108 @@ const actions = {
     },
 
     //Accounts actions
-    getAccounts ({ commit }) {
-        return new Promise((resolve, reject) => {
-            HTTP.get('accounts/')
-            .then((response) => {
-                commit(SET_ACCOUNTS, response.data.results);
-                resolve(response);
-            })
-            .catch((err) => {
-                reject(err);
-            });
-        });
+    async getAccounts ({ commit }) {
+        const response = await HTTP.get('accounts/');
+        if (response.status === 200) {
+            commit(SET_ACCOUNTS, response.data.results)
+        }
+    },
+    async createAccount ({ commit }, accountData) {
+        const response = await HTTP.post('accounts/', accountData);
+        if (response.status === 201) {
+            commit(CREATE_ACCOUNT, response.data)
+        }
+    },
+    async updateAccount ({ dispatch }, accountData) {
+        const response = await HTTP.put(`accounts/${accountData.id}/`, accountData.data);
+        if (response.status === 200) {
+            dispatch('getAccounts')
+        }
+    },
+    async deleteAccount ({ commit }, account) {
+        const response = await HTTP.delete(`accounts/${account.id}/`);
+        if (response.status === 204) {
+            commit(REMOVE_ACCOUNT, account)
+        }
+
     },
     //Currencies actions
-    getCurrencies ({ commit }) {
-        return new Promise((resolve, reject) => {
-            HTTP.get('currencies/')
-            .then((response) => {
-                commit(SET_CURRENCIES, response.data.results);
-                resolve(response);
-            })
-            .catch((err) => {
-                reject(err);
-            });
-        });
+    async getCurrencies ({ commit }) {
+        const response = await HTTP.get('currencies/');
+        if (response.status === 200) {
+            commit(SET_CURRENCIES, response.data.results)
+        }
+    },
+    async addCurrency ({ commit }, currencyData) {
+        const response = await HTTP.post('currencies/', currencyData);
+        if (response.status === 201) {
+            commit(ADD_CURRENCY, response.data)
+        }
+    },
+    async updateCurrency ({ dispatch }, currencyData) {
+        const response = await HTTP.put(`currencies/${currencyData.id}/`, currencyData.data);
+        if (response.status === 200) {
+            dispatch('getCurrencies')
+        }
+    },
+    async deleteCurrency ({ commit }, currency) {
+        const response = await HTTP.delete(`currencies/${currency.id}/`);
+        if (response.status === 204) {
+            commit(REMOVE_CURRENCY, currency)
+        }
+
     },
     //Categories actions
-    getCategories ({ commit }) {
-        return new Promise((resolve, reject) => {
-            HTTP.get('categories/')
-            .then((response) => {
-                commit(SET_CATEGORIES, response.data.results);
-                resolve(response);
-            })
-            .catch((err) => {
-                reject(err);
-            });
-        });
+    async getCategories ({ commit }) {
+        const response = await HTTP.get('categories/');
+        if (response.status === 200) {
+            commit(SET_CATEGORIES, response.data.results)
+        }
+    },
+    async createCategory ({ commit }, categoryData) {
+        const response = await HTTP.post('categories/', categoryData);
+        if (response.status === 201) {
+            commit(CREATE_CATEGORY, response.data)
+        }
+    },
+    async updateCategory ({ dispatch }, categoryData) {
+        const response = await HTTP.put(`categories/${categoryData.id}/`, categoryData.data);
+        if (response.status === 200) {
+            dispatch('getCategories')
+        }
+    },
+    async deleteCategory ({ commit }, category) {
+        const response = await HTTP.delete(`categories/${category.id}/`);
+        if (response.status === 204) {
+            commit(REMOVE_CATEGORY, category)
+        }
+
     },
     //Subcategories actions
-    getSubcategories ({ commit }) {
-        return new Promise((resolve, reject) => {
-            HTTP.get('subcategories/')
-            .then((response) => {
-                commit(SET_SUBCATEGORIES, response.data.results);
-                resolve(response);
-            })
-            .catch((err) => {
-                reject(err);
-            });
-        });
+    async getSubcategories ({ commit }) {
+        const response = await HTTP.get('subcategories/');
+        if (response.status === 200) {
+            commit(SET_SUBCATEGORIES, response.data.results)
+        }
+    },
+    async createSubcategory ({ commit }, subcategoryData) {
+        const response = await HTTP.post('subcategories/', subcategoryData);
+        if (response.status === 201) {
+            commit(CREATE_SUBCATEGORY, response.data)
+        }
+    },
+    async updateSubcategory ({ dispatch }, subcategoryData) {
+        const response = await HTTP.put(`subcategories/${subcategoryData.id}/`, subcategoryData.data);
+        if (response.status === 200) {
+            dispatch('getSubcategories')
+        }
+    },
+    async deleteSubcategory({ commit }, subcategory) {
+        const response = await HTTP.delete(`subcategories/${subcategory.id}/`);
+        if (response.status === 204) {
+            commit(REMOVE_SUBCATEGORY, subcategory)
+        }
+
     },
     //Places actions
     getPlaces ({ commit }) {
@@ -105,6 +156,42 @@ const actions = {
             })
             .catch((err) => {
                 reject(err);
+            });
+        });
+    },
+    addPlace ({ commit }, placeData) {
+        return new Promise((resolve, reject) => {
+            HTTP.post('places/', placeData)
+            .then((response) => {
+                commit(ADD_PLACE, response.data);
+                resolve(response);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+        });
+    },
+    updatePlace ({ dispatch }, placeData) {
+        return new Promise((resolve, reject) => {
+            HTTP.put(`places/${placeData.id}`, placeData.data)
+            .then((response) => {
+                dispatch('getPlaces');
+                resolve(response);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+        });
+    },
+    deletePlace ({ commit }, place) {
+        return new Promise((resolve, reject) => {
+            HTTP.delete(`places/${place.id}`)
+            .then((response) => {
+                commit(REMOVE_PLACE, place);
+                resolve(response);
+            })
+            .catch((err) => {
+                reject(err)
             });
         });
     },
