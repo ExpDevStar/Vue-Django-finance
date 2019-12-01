@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3>Transaction List</h3>
-        <b-button v-b-modal.createTransactionForm variant="info">Create</b-button>
+        <b-button @click="showCreateModal()" variant="info">Create</b-button>
         <b-table-simple 
             v-for="transaction in transactions"
             v-bind:key="transaction.id">
@@ -18,7 +18,12 @@
                     <b-th>Create DateTime</b-th>
                     <b-th>Place</b-th>
                     <b-th>Notes</b-th>
-                    <b-th><b-button @click="showEditModal(transaction)" variant="warning">Edit</b-button></b-th>
+                    <b-th>
+                        <b-button 
+                            @click="showEditModal(transaction)" 
+                            variant="warning">
+                        Edit</b-button>
+                    </b-th>
                 </b-tr>
             </b-thead>
             <b-tbody>
@@ -34,17 +39,26 @@
                     <b-td>{{ transaction.create_datetime }}</b-td>
                     <b-td>{{ transaction.place }}</b-td>
                     <b-td>{{ transaction.notes }}</b-td>
-                    <b-th><b-button @click="showDeleteModal(transaction)" variant="danger">Delete</b-button></b-th>
+                    <b-th>
+                        <b-button 
+                            @click="showDeleteModal(transaction)" 
+                            variant="danger">
+                        Delete</b-button>
+                    </b-th>
                 </b-tr>
             </b-tbody>
         </b-table-simple>
-        <b-modal id="createTransactionForm" title="Create Transaction" hide-footer no-close-on-backdrop>
-            <createTransactionForm/>
+        <b-modal 
+            id="transactionForm" 
+            :title="modalTitle" 
+            hide-footer no-close-on-backdrop>
+            <transactionForm :action="action" :transaction="transaction"/>
         </b-modal>
-        <b-modal id="updateTransactionForm" title="Edit Transaction" hide-footer no-close-on-backdrop>
-            <updateTransactionForm :transaction="transaction"/>
-        </b-modal>
-        <b-modal id="deleteTransaction" title="Delete Transaction" ok-title="Delete" @ok="onDelete(transaction)">
+        <b-modal 
+            id="deleteTransaction" 
+            title="Delete Transaction" 
+            ok-title="Delete" 
+            @ok="onDelete(transaction)">
             <p>Are you sure to delete the transaction?</p>
         </b-modal>
     </div>
@@ -52,18 +66,18 @@
 
 <script>
 
-import createTransactionForm from '@/components/transaction/createTransactionForm.vue';
-import updateTransactionForm from '@/components/transaction/updateTransactionForm.vue';
+import transactionForm from '@/components/transaction/transactionForm.vue';
 
 export default {
     name: 'transactionList',
     components: {
-        createTransactionForm,
-        updateTransactionForm,
+        transactionForm,
     },
     data() {
         return {
             transaction: null,
+            action: '',
+            modalTitle: '',
         };
     },
     computed: {
@@ -75,13 +89,20 @@ export default {
         onDelete(transaction) {
             this.$store.dispatch('deleteTransaction', transaction)
         },
+        showCreateModal() {
+            this.action = 'create';
+            this.modalTitle = 'Create Transaction'
+            this.$bvModal.show('transactionForm');
+        },
         showEditModal(transaction) {
-            this.$bvModal.show('updateTransactionForm');
+            this.action = 'update';
             this.transaction = transaction;
+            this.modalTitle = 'Edit Transaction'
+            this.$bvModal.show('transactionForm');
         },
         showDeleteModal(transaction) {
-            this.$bvModal.show('deleteTransaction');
             this.transaction = transaction;
+            this.$bvModal.show('deleteTransaction');
         },
     },
 
