@@ -8,7 +8,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
     queryset = models.Transaction.objects.all()
     serializer_class = serializers.TransactionSerializer
 
-
 class AccountViewSet(viewsets.ModelViewSet):
     queryset = models.Account.objects.all()
     serializer_class = serializers.AccountSerializer
