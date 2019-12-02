@@ -2,52 +2,12 @@
     <div>
         <h3>Transaction List</h3>
         <b-button @click="showCreateModal()" variant="info">Create</b-button>
-        <b-table-simple 
-            v-for="transaction in transactions"
-            v-bind:key="transaction.id">
-            <b-thead>
-                <b-tr>
-                    <b-th>id</b-th>
-                    <b-th>Amount</b-th>
-                    <b-th>Currency</b-th>
-                    <b-th>Transaction Type</b-th>
-                    <b-th>Category</b-th>
-                    <b-th>Subcategory</b-th>
-                    <b-th>From Account</b-th>
-                    <b-th>On Account</b-th>
-                    <b-th>Create DateTime</b-th>
-                    <b-th>Place</b-th>
-                    <b-th>Notes</b-th>
-                    <b-th>
-                        <b-button 
-                            @click="showEditModal(transaction)" 
-                            variant="warning">
-                        Edit</b-button>
-                    </b-th>
-                </b-tr>
-            </b-thead>
-            <b-tbody>
-                <b-tr>
-                    <b-td>{{ transaction.id }}</b-td>
-                    <b-td>{{ transaction.amount }}</b-td>
-                    <b-td>{{ transaction.currency }}</b-td>
-                    <b-td>{{ transaction.trans_type }}</b-td>
-                    <b-td>{{ transaction.category }}</b-td>
-                    <b-td>{{ transaction.subcategory }}</b-td>
-                    <b-td>{{ transaction.from_account }}</b-td>
-                    <b-td>{{ transaction.on_account }}</b-td>
-                    <b-td>{{ transaction.create_datetime }}</b-td>
-                    <b-td>{{ transaction.place }}</b-td>
-                    <b-td>{{ transaction.notes }}</b-td>
-                    <b-th>
-                        <b-button 
-                            @click="showDeleteModal(transaction)" 
-                            variant="danger">
-                        Delete</b-button>
-                    </b-th>
-                </b-tr>
-            </b-tbody>
-        </b-table-simple>
+        <b-table :items="transactions" :fields="fields" responsive primary-key="id">
+            <template v-slot:cell(actions)="data">
+                <b-button @click="showEditModal(data.item)" variant="warning" size="sm">Edit</b-button>&nbsp;
+                <b-button @click="showDeleteModal(data.item)" variant="danger" size="sm">Delete</b-button>
+            </template>
+        </b-table>
         <b-modal 
             id="transactionForm" 
             :title="modalTitle" 
@@ -78,6 +38,20 @@ export default {
             transaction: null,
             action: '',
             modalTitle: '',
+            fields: [
+                'amount',
+                'currency',
+                {key: 'trans_type', label: 'Type'},
+                'category',
+                'subcategory',
+                'from_account',
+                'on_account',
+                'from_account',
+                'create_datetime',
+                'place',
+                'notes',
+                'actions',
+            ],
         };
     },
     computed: {

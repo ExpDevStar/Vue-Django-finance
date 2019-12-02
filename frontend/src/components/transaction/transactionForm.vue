@@ -82,7 +82,7 @@
                 ></b-form-textarea>
             </b-form-group>
 
-            <b-button type="submit" variant="primary">Submit</b-button>
+            <b-button type="submit" variant="primary">Submit</b-button>&nbsp;
             <b-button @click="$bvModal.hide('transactionForm')">Cancel</b-button>
         </b-form>
     </div>
