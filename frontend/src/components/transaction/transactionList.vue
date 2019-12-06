@@ -4,21 +4,21 @@
         <b-button @click="showCreateModal()" variant="info">Create</b-button>
         <b-table :items="transactions" :fields="fields" responsive primary-key="id">
             <template v-slot:cell(actions)="data">
-                <b-button @click="showEditModal(data.item)" variant="warning" size="sm">Edit</b-button>&nbsp;
-                <b-button @click="showDeleteModal(data.item)" variant="danger" size="sm">Delete</b-button>
+                <b-button @click="showEditModal(data.item.id)" variant="warning" size="sm">Edit</b-button>&nbsp;
+                <b-button @click="showDeleteModal(data.item.id)" variant="danger" size="sm">Delete</b-button>
             </template>
         </b-table>
         <b-modal 
             id="transactionForm" 
             :title="modalTitle" 
             hide-footer no-close-on-backdrop>
-            <transactionForm :action="action" :transaction="transaction"/>
+            <transactionForm :action="action" :transactionId="transactionId"/>
         </b-modal>
         <b-modal 
             id="deleteTransaction" 
             title="Delete Transaction" 
             ok-title="Delete" 
-            @ok="onDelete(transaction)">
+            @ok="onDelete(transactionId)">
             <p>Are you sure to delete the transaction?</p>
         </b-modal>
     </div>
@@ -35,7 +35,7 @@ export default {
     },
     data() {
         return {
-            transaction: null,
+            transactionId: null,
             action: '',
             modalTitle: '',
             fields: [
@@ -56,26 +56,59 @@ export default {
     },
     computed: {
         transactions() {
-            return this.$store.getters.transactions;
+            const rawTransactions = this.$store.getters.transactions;
+            const transactions = []
+            rawTransactions.forEach(rawTransaction => {
+                const transaction = {
+                    id: rawTransaction.id, 
+                    amount: rawTransaction.amount,
+                    currency: rawTransaction.currency,
+                    trans_type: rawTransaction.trans_type,
+                    category: rawTransaction.category, 
+                    subcategory: rawTransaction.subcategory,
+                    from_account: rawTransaction.from_account,
+                    on_account: rawTransaction.on_account,
+                    place: rawTransaction.place,
+                    create_datetime: rawTransaction.create_datetime,
+                    notes: rawTransaction.notes,
+                };
+                const foreignkeyAttributesObject = {
+                    currency: rawTransaction.currency,
+                    category: rawTransaction.category, 
+                    subcategory: rawTransaction.subcategory,
+                    from_account: rawTransaction.from_account,
+                    on_account: rawTransaction.on_account,
+                    place: rawTransaction.place
+                }
+                for (const key in foreignkeyAttributesObject) {
+                    if (foreignkeyAttributesObject[key] === null) {
+                        transaction[key] === null;
+                    } else {
+                        transaction[key] = foreignkeyAttributesObject[key].string_repr;
+                    }
+                }
+                transactions.push(transaction);
+            })
+            return transactions;
         },
     },
     methods: {
-        onDelete(transaction) {
-            this.$store.dispatch('deleteTransaction', transaction)
+        onDelete(transactionId) {
+            this.$store.dispatch('deleteTransaction', transactionId)
         },
         showCreateModal() {
             this.action = 'create';
             this.modalTitle = 'Create Transaction'
             this.$bvModal.show('transactionForm');
         },
-        showEditModal(transaction) {
+        showEditModal(transactionId) {
             this.action = 'update';
-            this.transaction = transaction;
+            this.transactionId = transactionId;
             this.modalTitle = 'Edit Transaction'
             this.$bvModal.show('transactionForm');
         },
-        showDeleteModal(transaction) {
-            this.transaction = transaction;
+        showDeleteModal(transactionId) {
+            this.transactionId = transactionId;
             this.$bvModal.show('deleteTransaction');
         },
     },

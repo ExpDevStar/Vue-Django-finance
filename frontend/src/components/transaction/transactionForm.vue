@@ -93,22 +93,23 @@ import { mapGetters } from 'vuex';
 
 export default {
     name: 'transactionForm',
-    props: ['transaction', 'action'],
+    props: ['transactionId', 'action'],
     data() {
         return {
             form: {
                 amount: null,
-                currency: '',
-                trans_type: '',
-                category: '',
-                subcategory: '',
-                from_account: '',
-                on_account: '',
+                currency: null,
+                trans_type: null,
+                category: null,
+                subcategory: null,
+                from_account: null,
+                on_account: null,
                 create_datetime: new Date(),
-                place: '',
+                place: null,
                 notes: '',
             },
             transactionTypes: [
+                {value: null, text: '--Select item--'},
                 { value: 'INC', text: 'Income'},
                 { value: 'EXP', text: 'Expences'},
                 { value: 'TEC', text: 'Technical'},
@@ -117,7 +118,7 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'accounts', 'currencies', 'categories',
+          'transaction', 'accounts', 'currencies', 'categories',
             'subcategories', 'places',
         ]),
     },
@@ -138,8 +139,12 @@ export default {
                     notes: this.form.notes,
                 };
 
-                this.$store.dispatch('createTransaction', data);
-                this.$bvModal.hide('transactionForm');
+                this.$store.dispatch('createTransaction', data)
+                .then(() => {
+                    this.$store.dispatch('getTransactions');
+                    this.$bvModal.hide('transactionForm');
+                });
+                
             } else if (this.action === 'update') {
                 const transactionData = {
                     id: this.form.id,
@@ -156,25 +161,30 @@ export default {
                         notes: this.form.notes,
                     },
                 };
-                this.$store.dispatch('updateTransaction', transactionData);
-                this.$bvModal.hide('transactionForm');
+                this.$store.dispatch('updateTransaction', transactionData)
+                .then(() => {
+                    this.$store.dispatch('getTransactions');
+                    this.$bvModal.hide('transactionForm');
+                }); 
             }
-            
         },
         updateFormData() {
             if (this.action === 'update') {
-                const transaction = this.transaction;
-                this.form.id = transaction.id,
-                this.form.amount = transaction.amount;
-                this.form.currency = transaction.currency;
-                this.form.trans_type = transaction.trans_type;
-                this.form.category = transaction.category;
-                this.form.subcategory = transaction.subcategory;
-                this.form.from_account = transaction.from_account;
-                this.form.on_account = transaction.on_account;
-                this.form.create_datetime = transaction.create_datetime;
-                this.form.place = transaction.place;
-                this.form.notes = transaction.notes;
+                this.$store.dispatch('getTransaction', this.transactionId)
+                .then(() => {
+                    const transaction = this.transaction;
+                    this.form.id = transaction.id,
+                    this.form.amount = transaction.amount;
+                    this.form.currency = transaction.currency;
+                    this.form.trans_type = transaction.trans_type;
+                    this.form.category = transaction.category;
+                    this.form.subcategory = transaction.subcategory;
+                    this.form.from_account = transaction.from_account;
+                    this.form.on_account = transaction.on_account;
+                    this.form.create_datetime = transaction.create_datetime;
+                    this.form.place = transaction.place;
+                    this.form.notes = transaction.notes;
+                });
             } else {
                 return null
             }
@@ -182,7 +192,7 @@ export default {
         },
         //Method to generate array of options for b-form-select
         getTargets(rawTargets) {
-            const targets = []
+            const targets = [{ value: null, text: '--Select item--'}, ]
             if (rawTargets) {
                 if (rawTargets.every(object => {
                     return 'name' in object
@@ -190,31 +200,33 @@ export default {
                         rawTargets.forEach((rawTarget) => {
                             const target = {
                                 value: rawTarget.id,
-                                text: rawTarget.name,
+                                text: rawTarget.name
                             }
-                        targets.push(target);
+                            targets.push(target)
                         })
                 } else {
                     rawTargets.forEach((rawTarget) => {
-                    const target = {
-                        value: rawTarget.id,
-                        text: `${rawTarget.title}, ${rawTarget.amount} ${rawTarget.currency}`,
-                    }
-                    targets.push(target);
-                })
+                        const target = {
+                            value: rawTarget.id,
+                            text: `${rawTarget.title}, ${rawTarget.amount} ${rawTarget.currency}`
+                        }
+                        targets.push(target);
+                    })
                 }
             }
             return targets
         },
     },
     beforeMount() {
-        this.updateFormData()
         //Get data for selects from api
         this.$store.dispatch('getAccounts');
         this.$store.dispatch('getCurrencies');
         this.$store.dispatch('getCategories');
         this.$store.dispatch('getSubcategories');
         this.$store.dispatch('getPlaces');
+        this.updateFormData();
+        
+        
     }
 }
 </script>
