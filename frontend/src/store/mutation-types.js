@@ -1,6 +1,8 @@
 //Transactions mutations types
 export const SET_TRANSACTIONS = 'SET_TRANSACTIONS'
+export const SET_TRANSACTION = 'SET_TRANSACTION'
 export const CREATE_TRANSACTION = 'CREATE_TRANSACTION'
+export const UPDATE_TRANSACTION = 'UPDATE_TRANSACTION'
 export const REMOVE_TRANSACTION = 'REMOVE_TRANSACTION'
 
 //Accounts mutations types

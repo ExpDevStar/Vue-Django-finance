@@ -10,6 +10,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         transactions: [],
+        transaction: null,
         accounts: [],
         currencies: [],
         categories: [],
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     },
     getters: {
         transactions: state => state.transactions,
+        transaction: state => state.transaction,
         accounts: state => state.accounts,
         currencies: state => state.currencies,
         categories: state => state.categories,

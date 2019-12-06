@@ -1,5 +1,5 @@
 import {
-    SET_TRANSACTIONS, CREATE_TRANSACTION, REMOVE_TRANSACTION,
+    SET_TRANSACTIONS, SET_TRANSACTION, CREATE_TRANSACTION, UPDATE_TRANSACTION, REMOVE_TRANSACTION,
     SET_ACCOUNTS, CREATE_ACCOUNT, REMOVE_ACCOUNT,
     SET_CURRENCIES, ADD_CURRENCY, REMOVE_CURRENCY,
     SET_CATEGORIES, CREATE_CATEGORY, REMOVE_CATEGORY,
@@ -13,12 +13,18 @@ export default {
     [SET_TRANSACTIONS] (state, transactions) {
         state.transactions = transactions;
     },
+    [SET_TRANSACTION] (state, transaction) {
+        state.transaction = transaction;
+    },
+    [UPDATE_TRANSACTION] (state) {// eslint-disable-line no-unused-vars
+        
+    },
     [CREATE_TRANSACTION] (state, transaction) {
         state.transactions = [transaction, ...state.transactions];
     },
-    [REMOVE_TRANSACTION] (state, { id }) {
+    [REMOVE_TRANSACTION] (state,  transactionId ) {
         state.transactions = state.transactions.filter(transaction => {
-            return transaction.id !== id
+            return transaction.id !== transactionId;
         })
     },
 

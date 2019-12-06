@@ -1,7 +1,7 @@
  import axios from 'axios'
 
 import {
-    SET_TRANSACTIONS, CREATE_TRANSACTION, REMOVE_TRANSACTION,
+    SET_TRANSACTIONS, SET_TRANSACTION, CREATE_TRANSACTION, UPDATE_TRANSACTION, REMOVE_TRANSACTION,
     SET_ACCOUNTS, CREATE_ACCOUNT, REMOVE_ACCOUNT,
     SET_CURRENCIES, ADD_CURRENCY, REMOVE_CURRENCY,
     SET_CATEGORIES, CREATE_CATEGORY, REMOVE_CATEGORY,
@@ -22,22 +22,28 @@ const actions = {
             commit(SET_TRANSACTIONS, response.data.results)
         }
     },
+    async getTransaction({ commit }, transactionId) {
+        const response = await HTTP.get(`transactions/${transactionId}`)
+        if (response.status === 200) {
+            commit(SET_TRANSACTION, response.data)
+        }
+    },
     async createTransaction ({ commit }, transactionData) {
         const response = await HTTP.post('transactions/', transactionData);
         if (response.status === 201) {
             commit(CREATE_TRANSACTION, response.data)
         }
     },
-    async updateTransaction ({ dispatch }, transactionData) {
+    async updateTransaction ({ commit }, transactionData) {
         const response = await HTTP.put(`transactions/${transactionData.id}/`, transactionData.data);
         if (response.status === 200) {
-            dispatch('getTransactions')
+            commit(UPDATE_TRANSACTION)
         }
     },
-    async deleteTransaction ({ commit }, transaction) {
-        const response = await HTTP.delete(`transactions/${transaction.id}/`);
+    async deleteTransaction ({ commit }, transactionId) {
+        const response = await HTTP.delete(`transactions/${transactionId}/`);
         if (response.status === 204) {
-            commit(REMOVE_TRANSACTION, transaction)
+            commit(REMOVE_TRANSACTION, transactionId)
         }
 
     },
