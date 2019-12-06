@@ -7,10 +7,29 @@ from accounting import serializers
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = models.Transaction.objects.all()
     serializer_class = serializers.TransactionSerializer
+    serializer_action_class = {
+        'list': serializers.RetrieveTransactionSerializer,
+    }
+
+    def get_serializer_class(self):
+        try:
+            return self.serializer_action_class[self.action]
+        except (KeyError, AttributeError):
+            return super().get_serializer_class()
+
 
 class AccountViewSet(viewsets.ModelViewSet):
     queryset = models.Account.objects.all()
     serializer_class = serializers.AccountSerializer
+    serializer_action_class = {
+        'list': serializers.RetrieveAccountSerializer,
+    }
+
+    def get_serializer_class(self):
+        try:
+            return self.serializer_action_class[self.action]
+        except (KeyError, AttributeError):
+            return super().get_serializer_class()
 
 class CurrencyViewSet(viewsets.ModelViewSet):
     queryset = models.Currency.objects.all()
