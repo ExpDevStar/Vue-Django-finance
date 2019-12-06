@@ -47,6 +47,20 @@ class Account(models.Model):
     notes = models.TextField(blank=True)
     create_datetime = models.DateTimeField(default=timezone.now)
 
+    def increase(self, sum, currency):
+        if self.currency.id == currency:
+            self.amount += sum
+        else:
+            raise Exception('Account currency must match transaction currency')
+
+    def decrease(self, sum, currency):
+        if self.amount < sum:
+            raise Exception('There is not enough money on the account. Replenish the account first')
+        elif self.currency.id != currency:
+            raise Exception('Account currency must match transaction currency')
+        else:
+            self.amount -= sum
+
     def __str__(self):
         return '{}, {} {}'.format(self.title, self.amount, self.currency)
 
