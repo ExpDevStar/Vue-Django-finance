@@ -89,7 +89,9 @@
 </template>
 
 <script>
+
 import { mapGetters } from 'vuex';
+import { getTargets } from '@/utils.js';
 
 export default {
     name: 'transactionForm',
@@ -190,32 +192,7 @@ export default {
             }
             
         },
-        //Method to generate array of options for b-form-select
-        getTargets(rawTargets) {
-            const targets = [{ value: null, text: '--Select item--'}, ]
-            if (rawTargets) {
-                if (rawTargets.every(object => {
-                    return 'name' in object
-                })) {
-                        rawTargets.forEach((rawTarget) => {
-                            const target = {
-                                value: rawTarget.id,
-                                text: rawTarget.name
-                            }
-                            targets.push(target)
-                        })
-                } else {
-                    rawTargets.forEach((rawTarget) => {
-                        const target = {
-                            value: rawTarget.id,
-                            text: `${rawTarget.title}, ${rawTarget.amount} ${rawTarget.currency}`
-                        }
-                        targets.push(target);
-                    })
-                }
-            }
-            return targets
-        },
+        getTargets: getTargets,
     },
     beforeMount() {
         //Get data for selects from api
@@ -225,8 +202,6 @@ export default {
         this.$store.dispatch('getSubcategories');
         this.$store.dispatch('getPlaces');
         this.updateFormData();
-        
-        
     }
 }
 </script>

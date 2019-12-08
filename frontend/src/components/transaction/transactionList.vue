@@ -1,13 +1,22 @@
 <template>
-    <div>
-        <h3>Transaction List</h3>
-        <b-button @click="showCreateModal()" variant="info">Create</b-button>
-        <b-table :items="transactions" :fields="fields" responsive primary-key="id">
-            <template v-slot:cell(actions)="data">
-                <b-button @click="showEditModal(data.item.id)" variant="warning" size="sm">Edit</b-button>&nbsp;
-                <b-button @click="showDeleteModal(data.item.id)" variant="danger" size="sm">Delete</b-button>
-            </template>
-        </b-table>
+    <div class="container">
+        <b-row>
+            <h3>Transaction List</h3>&nbsp;
+            <b-button @click="showCreateModal()" variant="info">Create</b-button>
+        </b-row>
+        <b-row>
+            <b-col cols="10">
+                <b-table :items="transactions" :fields="fields" responsive primary-key="id">
+                    <template v-slot:cell(actions)="data">
+                        <b-button @click="showEditModal(data.item.id)" variant="warning" size="sm">Edit</b-button>&nbsp;
+                        <b-button @click="showDeleteModal(data.item.id)" variant="danger" size="sm">Delete</b-button>
+                    </template>
+                </b-table>
+            </b-col>
+            <b-col cols="2">
+                <filtrationSidebar @filter="filter"/>
+            </b-col>
+        </b-row>
         <b-modal 
             id="transactionForm" 
             :title="modalTitle" 
@@ -27,11 +36,13 @@
 <script>
 
 import transactionForm from '@/components/transaction/transactionForm.vue';
+import filtrationSidebar from '@/components/transaction/filtrationSidebar.vue';
 
 export default {
     name: 'transactionList',
     components: {
         transactionForm,
+        filtrationSidebar,
     },
     data() {
         return {
@@ -111,6 +122,9 @@ export default {
             this.transactionId = transactionId;
             this.$bvModal.show('deleteTransaction');
         },
+        filter(params) {
+            this.$store.dispatch('getTransactions', params);
+        }
     },
 
     beforeMount() {
