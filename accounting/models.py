@@ -65,6 +65,12 @@ class Account(models.Model):
         return '{}, {} {}'.format(self.title, self.amount, self.currency)
 
 
+class AccountJournal(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=7, decimal_places=2)
+    timestamp = models.DateTimeField(default=timezone.now)
+
+
 class Currency(models.Model):
     name = models.CharField(max_length=3)
     full_name = models.CharField(max_length=20)
