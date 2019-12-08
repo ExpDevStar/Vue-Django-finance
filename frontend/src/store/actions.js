@@ -16,8 +16,8 @@ const HTTP = axios.create({
 
 const actions = {
     //Transactions actions
-    async getTransactions ({ commit }) {
-        const response = await HTTP.get('transactions/');
+    async getTransactions ({ commit }, params) {
+        const response = await HTTP.get('transactions/', params);
         if (response.status === 200) {
             commit(SET_TRANSACTIONS, response.data.results)
         }
