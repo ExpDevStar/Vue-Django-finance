@@ -1,14 +1,20 @@
 from decimal import Decimal
+
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from accounting import models
 from accounting import serializers
+from accounting import filters
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = models.Transaction.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.TransactionFilterSet
+    search_fields = ['notes',]
     serializer_class = serializers.TransactionSerializer
     serializer_action_class = {
         'list': serializers.RetrieveTransactionSerializer,
@@ -19,6 +25,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
             return self.serializer_action_class[self.action]
         except (KeyError, AttributeError):
             return super().get_serializer_class()
+
 
     def create(self, request):
         amount = Decimal(request.data['amount'])
