@@ -1,17 +1,18 @@
 <template>
   <div id="app">
-    <transactionList/>
+    <navigationBar/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 
-import transactionList from '@/components/transaction/transactionList.vue';
+import navigationBar from '@/components/navigationBar.vue';
 
 export default {
   name: 'app',
   components: {
-    transactionList,
+    navigationBar,
   },
 
 }

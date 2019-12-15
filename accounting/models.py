@@ -39,6 +39,15 @@ class Transaction(models.Model):
                                         self.create_datetime
                                         )
 
+class AccountJournal(models.Model):
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, null=True)
+    account = models.ForeignKey('Account', on_delete=models.CASCADE)
+    amount_before = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+    amount_after = models.DecimalField(max_digits=7, decimal_places=2)
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return '{}, {}, {} {}'.format(self.transaction, self.account, self.amount_before, self.amount_after)
 
 class Account(models.Model):
     title = models.CharField(max_length=20)
@@ -46,6 +55,15 @@ class Account(models.Model):
     currency = models.ForeignKey('Currency', on_delete=models.CASCADE)
     notes = models.TextField(blank=True)
     create_datetime = models.DateTimeField(default=timezone.now)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.old_amount = self.amount
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.old_amount != self.amount:
+            AccountJournal.objects.create(transaction=None, account=self, amount_before=self.old_amount, amount_after=self.amount)
 
     def increase(self, sum, currency):
         if self.currency.id == currency:
@@ -64,11 +82,6 @@ class Account(models.Model):
     def __str__(self):
         return '{}, {} {}'.format(self.title, self.amount, self.currency)
 
-
-class AccountJournal(models.Model):
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=7, decimal_places=2)
-    timestamp = models.DateTimeField(default=timezone.now)
 
 
 class Currency(models.Model):
